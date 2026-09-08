@@ -51,11 +51,16 @@ app.use(
 );
 app.use(express.json());
 
-// ==================== DATABASE ====================
-connectDB();
+// ==================== DATABASE & MIDDLEWARE ====================
+app.use(async (req, res, next) => {
+  await connectDB();
+  next();
+});
 
 // ==================== HEALTH / ROOT ROUTE ====================
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
+  await connectDB();
+
   const dbStatusMap = {
     0: "Disconnected",
     1: "Connected",
